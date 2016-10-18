@@ -1,0 +1,13 @@
+codes <- c(Voltage="numeric", Global_active_power="numeric",Global_intensity="numeric",Sub_metering_1="numeric",Sub_metering_2="numeric",Sub_metering_3="numeric",Global_active_power="numeric",Global_reactive_power="numeric")
+data <- read.table("household_power_consumption.txt", sep=";",header=TRUE, na.strings = "?", colClasses=codes) 
+TEST <- data[data$Date %in% c("1/2/2007","2/2/2007"),]
+str(TEST) # moeten er 2880 zijn
+TEST <-na.omit(TEST)
+
+TimeDate <- strptime(paste(TEST$Date, TEST$Time, sep=" "), "%d/%m/%Y %H:%M:%S")
+TEST <- cbind(TimeDate, TEST)
+
+#PLOT 1
+png(filename="Plot1.png")
+hist(TEST$Global_active_power, col = "red", xlab="Global Active Power (kilowatts)", ylab="Frequency", main="Global Active Power")
+dev.off()
