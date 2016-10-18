@@ -1,0 +1,25 @@
+codes <- c(Voltage="numeric", Global_active_power="numeric",Global_intensity="numeric",Sub_metering_1="numeric",Sub_metering_2="numeric",Sub_metering_3="numeric",Global_active_power="numeric",Global_reactive_power="numeric")
+data <- read.table("household_power_consumption.txt", sep=";",header=TRUE, na.strings = "?", colClasses=codes) 
+TEST <- data[data$Date %in% c("1/2/2007","2/2/2007"),]
+str(TEST) # moeten er 2880 zijn
+TEST <-na.omit(TEST)
+
+TimeDate <- strptime(paste(TEST$Date, TEST$Time, sep=" "), "%d/%m/%Y %H:%M:%S")
+TEST <- cbind(TimeDate, TEST)
+
+#PLOT 4
+png(filename="Plot4.png")
+#
+par(mfrow=c(2,2))
+#Plot 1
+with(TEST,plot(TimeDate,Global_active_power, type="l", col="black", xlab="", ylab="Global Active Power (kilowatts)"))
+#Plot 2
+with(TEST,plot(TimeDate,Voltage, type="l", col="black", xlab="datetime", ylab="Voltage"))
+#Plot 3
+with(TEST, plot(TimeDate, Sub_metering_1, col="black", type="l", xlab="", ylab="Engery sub metering"))
+with(TEST, lines(TimeDate, Sub_metering_2, col="red", type="l"))
+with(TEST, lines(TimeDate, Sub_metering_3, col="blue", type="l"))
+legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col= c("black", "red", "blue"), lty = "solid")
+#Plot 4
+with(TEST,plot(TimeDate,Global_reactive_power, type="l", col="black", xlab="datetime", ylab="Global_reactive_power"))
+dev.off()
